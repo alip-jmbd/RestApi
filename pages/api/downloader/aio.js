@@ -6,7 +6,9 @@ export default async function handler(req, res) {
     if (!url) return res.status(400).json({ error: 'URL is required' });
     
     try {
-        const { data } = await axios.post('https://auto-download-all-in-one.p.rapidapi.com/v1/social/autolink', { url }, {
+        const { data } = await axios.post('https://auto-download-all-in-one.p.rapidapi.com/v1/social/autolink', {
+            url
+        }, {
             headers: {
                 'x-rapidapi-host': 'auto-download-all-in-one.p.rapidapi.com',
                 'x-rapidapi-key': '1dda0d29d3mshc5f2aacec619c44p16f219jsn99a62a516f98'

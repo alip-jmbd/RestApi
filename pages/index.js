@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { useRef } from 'react';
 
 export async function getStaticProps() {
-    const stats = await getRequestCounts();
+    const stats = await getRequestCounts(); 
     return {
         props: { stats },
         revalidate: 10
@@ -34,8 +34,7 @@ export default function Home({ stats }) {
             <div className={styles.content}>
                 <h1 className={`${styles.title} shiny-text`}>LIPP - API</h1>
                 <p className={styles.description}>
-                    Simple, fast, and elegant REST API for a variety of needs.
-                    アリフ著
+                    REST API yang simpel, cepat, dan elegan untuk berbagai kebutuhan.
                 </p>
 
                 <div className={styles.statsGrid}>

@@ -26,18 +26,11 @@ const EndpointDetail = ({ endpoint, origin }) => {
 
     const { requestUrl, curl } = useMemo(() => {
         if (!origin) return { requestUrl: '', curl: 'Loading...' };
-
         if (endpoint.method === 'POST') {
             let curlCommand = `curl -X 'POST' \\\n  '${origin}${endpoint.path}'`;
-            endpoint.params.forEach(param => {
-                if (formState[param.name] || param.type === 'file') {
-                    const value = param.type === 'file' ? '@path/to/file' : formState[param.name];
-                    curlCommand += ` \\\n  -F '${param.name}=${value}'`;
-                }
-            });
+            endpoint.params.forEach(param => { if (formState[param.name] || param.type === 'file') { const value = param.type === 'file' ? '@path/to/file' : formState[param.name]; curlCommand += ` \\\n  -F '${param.name}=${value}'`; }});
             return { requestUrl: `${origin}${endpoint.path}`, curl: curlCommand };
         }
-        
         const url = new URL(`${origin}${endpoint.path}`);
         endpoint.params.forEach(param => { if (formState[param.name]) url.searchParams.append(param.name, formState[param.name]); });
         const finalUrl = url.href;
@@ -48,32 +41,21 @@ const EndpointDetail = ({ endpoint, origin }) => {
     const handleExecute = async () => {
         if (!requestUrl) return;
         setIsLoading(true); setResponse(null);
-
         try {
             let res;
             if (endpoint.method === 'POST') {
                 const formData = new FormData();
                 let hasPayload = false;
-                for (const key in formState) {
-                    if (formState[key]) {
-                        formData.append(key, formState[key]);
-                        hasPayload = true;
-                    }
-                }
-                if (!hasPayload) {
-                     throw new Error("Untuk request POST, URL atau File harus diisi.");
-                }
+                for (const key in formState) { if (formState[key]) { formData.append(key, formState[key]); hasPayload = true; } }
+                if (!hasPayload) { throw new Error("Untuk request POST, URL atau File harus diisi."); }
                 res = await fetch(requestUrl, { method: 'POST', body: formData });
             } else {
                 res = await fetch(requestUrl);
             }
-
             const contentType = res.headers.get('Content-Type');
-
             if (res.ok && contentType && (contentType.includes('image') || contentType.includes('video') || contentType.includes('audio'))) {
                 const blob = await res.blob();
                 const objectUrl = URL.createObjectURL(blob);
-                
                 if (contentType.includes('image')) {
                     setResponse({ isImage: true, url: objectUrl, status: res.status });
                 } else {
@@ -84,7 +66,7 @@ const EndpointDetail = ({ endpoint, origin }) => {
                     document.body.appendChild(tempLink);
                     tempLink.click();
                     document.body.removeChild(tempLink);
-                    URL.revokeObjectURL(objectUrl); // Bebaskan memori
+                    URL.revokeObjectURL(objectUrl);
                     setResponse({ status: 200, body: { success: true, message: `Download dimulai untuk: ${filename}` } });
                 }
             } else {
@@ -100,12 +82,7 @@ const EndpointDetail = ({ endpoint, origin }) => {
     return (
         <div className={styles.endpointDetailWrapper}>
             <div className={styles.form}>
-                {endpoint.params.map(param => (
-                    <div key={param.name}>
-                        <label htmlFor={`${endpoint.id}-${param.name}`}>{param.name}</label>
-                        <ParamInput param={param} endpointId={endpoint.id} setFormState={setFormState}/>
-                    </div>
-                ))}
+                {endpoint.params.map(param => ( <div key={param.name}> <label htmlFor={`${endpoint.id}-${param.name}`}>{param.name}</label> <ParamInput param={param} endpointId={endpoint.id} setFormState={setFormState}/> </div> ))}
                 <button onClick={handleExecute} disabled={isLoading || !origin}>{isLoading ? 'Loading...' : 'Execute'}</button>
             </div>
             <div className={styles.resultContainer}>
@@ -122,10 +99,7 @@ const EndpointDetail = ({ endpoint, origin }) => {
 };
 
 const ParamInput = ({ param, endpointId, setFormState }) => {
-    const handleChange = (e) => {
-        const { name, value, files } = e.target;
-        setFormState(s => ({...s, [name]: files ? files[0] : value}));
-    };
+    const handleChange = (e) => { const { name, value, files } = e.target; setFormState(s => ({...s, [name]: files ? files[0] : value})); };
     if (param.type === 'file') return <input type="file" name={param.name} id={`${endpointId}-${param.name}`} onChange={handleChange} />;
     if (param.type === 'select') return <select name={param.name} id={`${endpointId}-${param.name}`} defaultValue={param.default} onChange={handleChange}>{param.options.map(opt => <option key={opt} value={opt}>{opt}</option>)}</select>;
     return <input type="text" name={param.name} id={`${endpointId}-${param.name}`} defaultValue={param.default || ''} onChange={handleChange} placeholder={param.placeholder} />;
@@ -155,6 +129,8 @@ export default function Docs() {
     useEffect(() => {
         if (typeof window !== 'undefined') setOrigin(window.location.origin);
         fetch('/api/stats').then(res => res.json()).then(data => setStats(data));
+        const interval = setInterval(() => { fetch('/api/stats').then(res => res.json()).then(data => setStats(data)); }, 5000);
+        return () => clearInterval(interval);
     }, []);
     
     const categories = ['All', ...Array.from(new Set(allEndpoints.map(e => e.category)))];
@@ -163,11 +139,7 @@ export default function Docs() {
     return (
         <div className={styles.container}>
             <Head><title>LIPP - API | Documentation</title></Head>
-            <div className={styles.banner}>
-                <video autoPlay loop muted playsInline className={styles.bannerVideo} key="banner-video">
-                    <source src="/banner-video.mp4" type="video/mp4" />
-                </video>
-            </div>
+            <div className={styles.banner}><video autoPlay loop muted playsInline className={styles.bannerVideo} key="banner-video"><source src="/banner-video.mp4" type="video/mp4" /></video></div>
             <div className={styles.topBar}><div className={styles.searchWrapper}><input type="text" placeholder="Cari endpoint..." className={styles.searchInput} onChange={(e) => setSearch(e.target.value)} /></div><StatsDisplay stats={stats} /></div>
             <div className={styles.tabs}>{categories.map(cat => <button key={cat} onClick={() => setCategory(cat)} className={`${styles.tabButton} ${category === cat ? styles.activeTab : ''}`}>{cat}</button>)}</div>
             <div className={styles.main}>{filteredEndpoints.map(endpoint => <EndpointAccordion key={endpoint.id} endpoint={endpoint} origin={origin} />)}</div>

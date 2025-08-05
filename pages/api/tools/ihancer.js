@@ -49,7 +49,6 @@ export default async function handler(req, res) {
         });
         
         await incrementRequestCount();
-
         res.setHeader('Content-Type', 'image/jpeg');
         res.send(Buffer.from(data));
     } catch (error) {
