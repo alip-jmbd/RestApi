@@ -3,7 +3,8 @@ import Link from 'next/link';
 import styles from '../styles/Home.module.css';
 import { getRequestCounts } from '../lib/db';
 import Image from 'next/image';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
+import { useRouter } from 'next/router';
 
 export async function getStaticProps() {
     const stats = await getRequestCounts(); 
@@ -15,6 +16,8 @@ export async function getStaticProps() {
 
 export default function Home({ stats }) {
     const cardRef = useRef(null);
+    const router = useRouter();
+    const [isLeaving, setIsLeaving] = useState(false);
 
     const handleMouseMove = (e) => {
         if (!cardRef.current) return;
@@ -24,9 +27,17 @@ export default function Home({ stats }) {
         cardRef.current.style.setProperty('--mouse-x', `${x}px`);
         cardRef.current.style.setProperty('--mouse-y', `${y}px`);
     };
+    
+    const handleNavigate = (e) => {
+        e.preventDefault();
+        setIsLeaving(true);
+        setTimeout(() => {
+            router.push('/docs');
+        }, 300);
+    };
 
     return (
-        <div className={styles.container}>
+        <div className={`${styles.container} ${isLeaving ? styles.leaving : ''}`}>
             <Head>
                 <title>LIPP - API | Welcome</title>
             </Head>
@@ -49,7 +60,7 @@ export default function Home({ stats }) {
                 </div>
 
                 <Link href="/docs" legacyBehavior>
-                    <a className={styles.exploreButton}>Explore Documentation</a>
+                    <a className={styles.exploreButton} onClick={handleNavigate}>Explore Documentation</a>
                 </Link>
                 
                 <h2 className={styles.thanksTitle}>Thanks To</h2>

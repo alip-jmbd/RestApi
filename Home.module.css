@@ -1,0 +1,148 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  min-height: calc(100vh - 140px);
+  padding: 2rem;
+  transition: opacity 0.3s ease-out;
+}
+
+.leaving {
+    opacity: 0;
+}
+
+.content {
+  max-width: 600px;
+  width: 100%;
+}
+
+.title {
+  font-size: 3.5rem;
+  font-weight: 700;
+  letter-spacing: -2px;
+}
+
+.description {
+  margin-top: 0.75rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--secondary-text);
+  margin-bottom: 2.5rem;
+}
+
+.statsGrid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+  width: 100%;
+}
+
+.statCard {
+  flex: 1;
+  padding: 1.2rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  transition: all 0.2s ease-in-out;
+}
+.statCard h3 { font-size: 2rem; margin-bottom: 0.25rem; color: var(--text); }
+.statCard p { font-size: 0.8rem; color: var(--secondary-text); text-transform: uppercase; letter-spacing: 0.5px; }
+
+.exploreButton {
+  display: inline-block;
+  padding: 0.9rem 2.2rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #fff;
+  background-image: linear-gradient(144deg, #4E4AF2, #833AB4 50%, #E84D63);
+  border: 0;
+  border-radius: 8px;
+  box-shadow: rgba(151, 65, 252, 0.2) 0 15px 30px -5px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
+.exploreButton:hover { transform: translateY(-2px); box-shadow: rgba(151, 65, 252, 0.3) 0 20px 35px -10px; }
+
+.thanksTitle {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 4rem 0 1.5rem 0;
+    color: var(--text);
+}
+
+.creatorCard {
+    margin: 0 auto;
+    padding: 1px;
+    border-radius: 16px;
+    max-width: 320px;
+    position: relative;
+    background: linear-gradient(135deg, #8A2BE2, #4A00E0);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.creatorCard:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 10px 30px -10px #6A5ACD80;
+}
+
+.creatorCard::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 15px;
+    background: radial-gradient(
+        350px circle at var(--mouse-x, -100px) var(--mouse-y, -100px),
+        rgba(255, 255, 255, 0.15),
+        transparent 40%
+    );
+    opacity: 0;
+    transition: opacity 0.5s;
+    z-index: 1;
+}
+
+.creatorCard:hover::before {
+    opacity: 1;
+}
+
+.creatorCardContent {
+    background: var(--bg);
+    border-radius: 15px;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+}
+
+.creatorAvatarWrapper {
+    padding: 4px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #8A2BE2, #54a0ff);
+    margin-bottom: 1rem;
+    box-shadow: 0 0 15px rgba(138, 43, 226, 0.5);
+}
+
+.creatorAvatar {
+    border-radius: 50%;
+    border: 3px solid var(--bg);
+}
+
+.creatorName {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.creatorRole {
+    margin-top: 0.25rem;
+    font-size: 0.9rem;
+    color: var(--secondary-text);
+    font-weight: 500;
+}
