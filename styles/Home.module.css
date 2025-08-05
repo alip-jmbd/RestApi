@@ -141,3 +141,40 @@
     color: var(--secondary-text);
     font-weight: 500;
 }
+
+.loadingOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(17, 24, 39, 0.5);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 9999;
+}
+
+.wavyText {
+    position: relative;
+    font-size: 2.5rem;
+    font-weight: 600;
+}
+
+.wavyText span {
+    position: relative;
+    display: inline-block;
+    animation: wave 1.8s infinite;
+    animation-delay: calc(0.1s * var(--i));
+}
+
+@keyframes wave {
+    0%, 40%, 100% {
+        transform: translateY(0);
+    }
+    20% {
+        transform: translateY(-20px);
+    }
+}

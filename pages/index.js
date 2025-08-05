@@ -1,10 +1,9 @@
 import Head from 'next/head';
-import Link from 'next/link';
+import { useState, useRef } from 'react';
+import { useRouter } from 'next/router';
 import styles from '../styles/Home.module.css';
 import { getRequestCounts } from '../lib/db';
 import Image from 'next/image';
-import { useRef, useState } from 'react';
-import { useRouter } from 'next/router';
 
 export async function getStaticProps() {
     const stats = await getRequestCounts(); 
@@ -15,9 +14,9 @@ export async function getStaticProps() {
 }
 
 export default function Home({ stats }) {
-    const cardRef = useRef(null);
+    const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
-    const [isLeaving, setIsLeaving] = useState(false);
+    const cardRef = useRef(null);
 
     const handleMouseMove = (e) => {
         if (!cardRef.current) return;
@@ -27,20 +26,29 @@ export default function Home({ stats }) {
         cardRef.current.style.setProperty('--mouse-x', `${x}px`);
         cardRef.current.style.setProperty('--mouse-y', `${y}px`);
     };
-    
-    const handleNavigate = (e) => {
-        e.preventDefault();
-        setIsLeaving(true);
-        setTimeout(() => {
-            router.push('/docs');
-        }, 300);
+
+    const handleExploreClick = () => {
+        setIsLoading(true);
+        router.push('/docs');
     };
+    
+    const loadingText = "Loading...".split("").map((char, index) => (
+        <span key={index} style={{'--i': index + 1}}>{char === ' ' ? '\u00A0' : char}</span>
+    ));
 
     return (
-        <div className={`${styles.container} ${isLeaving ? styles.leaving : ''}`}>
+        <div className={styles.container}>
             <Head>
                 <title>LIPP - API | Welcome</title>
             </Head>
+
+            {isLoading && (
+                <div className={styles.loadingOverlay}>
+                    <div className={`${styles.wavyText} shiny-text`}>
+                        {loadingText}
+                    </div>
+                </div>
+            )}
 
             <div className={styles.content}>
                 <h1 className={`${styles.title} shiny-text`}>LIPP - API</h1>
@@ -59,9 +67,9 @@ export default function Home({ stats }) {
                     </div>
                 </div>
 
-                <Link href="/docs" legacyBehavior>
-                    <a className={styles.exploreButton} onClick={handleNavigate}>Explore Documentation</a>
-                </Link>
+                <button onClick={handleExploreClick} className={styles.exploreButton}>
+                    Explore Documentation
+                </button>
                 
                 <h2 className={styles.thanksTitle}>Thanks To</h2>
 
