@@ -34,7 +34,8 @@ export default function Home({ stats }) {
             <div className={styles.content}>
                 <h1 className={`${styles.title} shiny-text`}>LIPP - API</h1>
                 <p className={styles.description}>
-                    REST API yang simpel, cepat, dan elegan untuk berbagai kebutuhan.
+                    Simple, fast, and elegant REST API for a variety of needs.
+                    アリフ著
                 </p>
 
                 <div className={styles.statsGrid}>
