@@ -29,7 +29,9 @@ export default function Home({ stats }) {
 
     const handleExploreClick = () => {
         setIsLoading(true);
-        router.push('/docs');
+        setTimeout(() => {
+            router.push('/docs');
+        }, 3000);
     };
     
     const loadingText = "Loading...".split("").map((char, index) => (
@@ -44,13 +46,18 @@ export default function Home({ stats }) {
 
             {isLoading && (
                 <div className={styles.loadingOverlay}>
-                    <div className={`${styles.wavyText} shiny-text`}>
-                        {loadingText}
+                    <div className={styles.loadingBox}>
+                        <svg className={styles.spinner} viewBox="0 0 50 50">
+                            <circle className={styles.path} cx="25" cy="25" r="20" fill="none" strokeWidth="5"></circle>
+                        </svg>
+                        <div className={`${styles.wavyText} shiny-text`}>
+                            {loadingText}
+                        </div>
                     </div>
                 </div>
             )}
 
-            <div className={styles.content}>
+            <div className={`${styles.content} ${isLoading ? styles.contentBlurred : ''}`}>
                 <h1 className={`${styles.title} shiny-text`}>LIPP - API</h1>
                 <p className={styles.description}>
                     REST API yang simpel, cepat, dan elegan untuk berbagai kebutuhan.
@@ -67,7 +74,7 @@ export default function Home({ stats }) {
                     </div>
                 </div>
 
-                <button onClick={handleExploreClick} className={styles.exploreButton}>
+                <button onClick={handleExploreClick} className={styles.exploreButton} disabled={isLoading}>
                     Explore Documentation
                 </button>
                 
