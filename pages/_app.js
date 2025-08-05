@@ -15,10 +15,10 @@ function MyApp({ Component, pageProps, router }) {
         <AnimatePresence mode="wait">
           <motion.main
             key={router.route}
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -15 }}
-            transition={{ duration: 0.3, ease: 'easeInOut' }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2, ease: 'easeInOut' }}
           >
             <Component {...pageProps} />
           </motion.main>
